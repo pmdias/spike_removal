@@ -27,6 +27,6 @@ jobs:
         flake8 .
 
     - name: Run unit tests
-    run: |
-      pip install pytest
-      pytest
+      run: |
+        pip install pytest
+        pytest
