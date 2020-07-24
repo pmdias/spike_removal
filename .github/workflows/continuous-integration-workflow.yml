@@ -1,4 +1,4 @@
-name: Spike Removal
+name: build
 
 on: [push]
 
