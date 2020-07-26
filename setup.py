@@ -43,9 +43,10 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "geopandas>=0.8.1",
-        "typer>=0.3.1",
     ],
     entry_points={
-        "console_scripts": []
+        "console_scripts": [
+            "spike_removal = spike_removal.cli:main",
+        ]
     },
 )
