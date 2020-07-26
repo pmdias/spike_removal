@@ -45,7 +45,25 @@ class GeometryProcessor:
 
         :return: Filtered list with the spikes removed from the input sequence
         """
-        raise NotImplementedError
+        vertices = sequence[:-1]  # discard the last vertex
+        triplets = [
+            ((i - 1) % len(vertices), i, (i + 1) % len(vertices))
+            for i in range(len(vertices))
+        ]
+
+        final_geometry = []
+
+        for triplet in triplets:
+            mark = self.process_triplet(geod, [
+                vertices[triplet[0]],
+                vertices[triplet[1]],
+                vertices[triplet[2]],
+            ])
+
+            if not mark:
+                final_geometry.append(vertices[triplet[1]])
+
+        return final_geometry
 
     def process_triplet(self, geod: pyproj.Geod, triplet: list) -> bool:
         """Process a triplet of vertices and check if the second vertex can be
