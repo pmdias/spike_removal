@@ -43,6 +43,18 @@ def simple_polygon_fixture():
 
 
 @pytest.fixture
+def polygon_with_holes():
+    """Fixture for geometry with holes."""
+    test_directory = os.path.abspath(os.path.dirname(__file__))
+    test_data_path = os.path.join(
+        test_directory,
+        "data/test_polygon_holes_data.gpkg"
+    )
+
+    return utils.load_geopackage(test_data_path)
+
+
+@pytest.fixture
 def default_processor():
     """Fixture for the default GeometryProcessor"""
     return process.GeometryProcessor(1.0, 100000.0)
@@ -103,3 +115,82 @@ def test_polygon_single_criteria(simple_polygon_fixture, default_processor):
     polygon = geometry.Polygon(vertices)
 
     assert polygon.equals(test_geom)
+
+
+def test_polygon_holes_no_spikes(polygon_with_holes, default_processor):
+    """Test that a polygon with holes but no spikes is returned without any
+    changes after being processed."""
+    test_geom = (
+        polygon_with_holes.loc[
+            polygon_with_holes["name"] == "no_spikes"
+        ]
+        .geometry.values[0]
+    )
+
+    processed_rings = []
+
+    for sequence in test_geom.interiors:
+        vertices = default_processor.process_sequence(
+            utils.extract_crs_geod(polygon_with_holes),
+            sequence.coords
+        )
+        processed_rings.append(vertices)
+
+    polygon = geometry.Polygon(test_geom.exterior, processed_rings)
+
+    assert polygon.equals(test_geom)
+
+
+def test_polygon_interior_spike(polygon_with_holes, default_processor):
+    """Test that a polygon with a spike on a interior ring is returned without
+    the internal spike after processing."""
+    test_geom = (
+        polygon_with_holes.loc[
+            polygon_with_holes["name"] == "interior_spike"
+        ]
+        .geometry.values[0]
+    )
+
+    processed_rings = []
+
+    for sequence in test_geom.interiors:
+        vertices = default_processor.process_sequence(
+            utils.extract_crs_geod(polygon_with_holes),
+            sequence.coords
+        )
+        processed_rings.append(vertices)
+
+    polygon = geometry.Polygon(test_geom.exterior, processed_rings)
+
+    assert len(polygon.interiors[0].coords) == \
+        len(test_geom.interiors[0].coords) - 1
+
+
+def test_multiple_interior_spikes(polygon_with_holes, default_processor):
+    """Test that a polygon with spikes in multiple interior rings is returned
+    without any of the spikes after processing."""
+    test_geom = (
+        polygon_with_holes.loc[
+            polygon_with_holes["name"] == "multiple_holes_with_spikes"
+        ]
+        .geometry.values[0]
+    )
+
+    processed_rings = []
+
+    for sequence in test_geom.interiors:
+        vertices = default_processor.process_sequence(
+            utils.extract_crs_geod(polygon_with_holes),
+            sequence.coords
+        )
+        processed_rings.append(vertices)
+
+    polygon = geometry.Polygon(test_geom.exterior, processed_rings)
+
+    assert (
+        len(polygon.interiors[0].coords) ==
+        len(test_geom.interiors[0].coords) - 1
+    ) and (
+        len(polygon.interiors[1].coords) ==
+        len(test_geom.interiors[1].coords) - 1
+    )
