@@ -127,7 +127,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# Ignore artifacts from opening the test data geopackages
-*.gpkg-shm
-*.gpkg-wal
