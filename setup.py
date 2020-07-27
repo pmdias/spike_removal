@@ -38,7 +38,7 @@ setup(
         "Issue Tracker": "https://github.com/pmdias/spike_removal/issues",
     },
     keywords=[
-
+        "spike_removal", "geometry", "geographic", "geopandas",
     ],
     python_requires=">=3.6",
     install_requires=[
