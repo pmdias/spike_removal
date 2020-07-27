@@ -27,8 +27,8 @@ class GeometryProcessor:
     min_distance: float = 100000.0
 
     def __init__(self, min_angle: float, min_distance: float):
-        self.min_angle = min_angle
-        self.min_distance = min_distance
+        self.min_angle = min_angle % 360
+        self.min_distance = abs(min_distance)
 
     def process_sequence(
             self,
@@ -45,6 +45,13 @@ class GeometryProcessor:
 
         :return: Filtered list with the spikes removed from the input sequence
         """
+        if len(sequence) <= 4:
+            # If the number of points in the coordinate sequence is 4 or less,
+            # this means that the sequence is a triangle and it means that we
+            # don't want to process this at the risk of creating an invalid
+            # polygon geometry
+            return list(sequence)
+
         vertices = sequence[:-1]  # discard the last vertex
         triplets = [
             ((i - 1) % len(vertices), i, (i + 1) % len(vertices))
