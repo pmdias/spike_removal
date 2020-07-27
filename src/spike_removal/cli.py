@@ -25,20 +25,31 @@ def main(filename: str, angle: float, distance: float, output: str):
     data = utils.load_geopackage(filename)
 
     if not utils.validate_crs(data):
-        raise Exception("Not a valid geographic CRS")
+        raise click.UsageError(
+            """The input file doesn't have a valid CRS or it does not have a
+            geographic CRS."""
+        )
 
     geod = utils.extract_crs_geod(data)
 
     processor = process.GeometryProcessor(angle, distance)
 
     results = []
-
     for entry in data.itertuples():
         geometry = entry.geometry
 
         exterior = processor.process_sequence(geod, geometry.exterior.coords)
 
-        results.append((entry.name, Polygon(exterior)))
+        interiors = []
+        for interior_ring in geometry.interiors:
+            processed_interior_ring = processor.process_sequence(
+                geod,
+                interior_ring.coords,
+            )
+
+            interiors.append(processed_interior_ring)
+
+        results.append((entry.name, Polygon(exterior, interiors)))
 
     out = GeoDataFrame(results, columns=["name", "geometry"], crs=data.crs)
 
