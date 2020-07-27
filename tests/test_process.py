@@ -1,5 +1,5 @@
 """
-Unit tests for the `utils` module
+Unit tests for the `process` module
 """
 # pylint: disable=redefined-outer-name
 import os
@@ -12,7 +12,10 @@ from spike_removal import process, utils
 
 @pytest.fixture
 def simple_polygon_fixture():
-    """Fixture for simple polygon"""
+    """
+    Fixture for simple polygon, i.e., polygons without holes and a singular
+    exterior boundary.
+    """
     test_directory = os.path.abspath(os.path.dirname(__file__))
     test_data_path = os.path.join(
         test_directory,
@@ -24,7 +27,9 @@ def simple_polygon_fixture():
 
 @pytest.fixture
 def polygon_with_holes():
-    """Fixture for geometry with holes."""
+    """
+    Fixture for geometry with holes.
+    """
     test_directory = os.path.abspath(os.path.dirname(__file__))
     test_data_path = os.path.join(
         test_directory,
@@ -36,13 +41,17 @@ def polygon_with_holes():
 
 @pytest.fixture
 def default_processor():
-    """Fixture for the default GeometryProcessor"""
+    """
+    Fixture for the default GeometryProcessor
+    """
     return process.GeometryProcessor(1.0, 100000.0)
 
 
 def test_polygon_without_spikes(simple_polygon_fixture, default_processor):
-    """Test that the processing of a polygon without spikes returns the same
-    polygon without any changes."""
+    """
+    Test that the processing of a polygon without spikes returns the same
+    polygon without any changes.
+    """
     test_geom = (
         simple_polygon_fixture.loc[
             simple_polygon_fixture["name"] == "no_spikes"
@@ -60,8 +69,10 @@ def test_polygon_without_spikes(simple_polygon_fixture, default_processor):
 
 
 def test_polygon_multiple_spikes(simple_polygon_fixture, default_processor):
-    """Test that a polygon with multiple spikes has all the spikes removed
-    after processing."""
+    """
+    Test that a polygon with multiple spikes has all the spikes removed
+    after processing.
+    """
     test_geom = (
         simple_polygon_fixture.loc[
             simple_polygon_fixture["name"] == "multiple_spikes"
@@ -79,8 +90,10 @@ def test_polygon_multiple_spikes(simple_polygon_fixture, default_processor):
 
 
 def test_polygon_single_criteria(simple_polygon_fixture, default_processor):
-    """Test that a polygon with a spike that only meets one of the criteria
-    used to mark spikes, is equal to the original polygon after processing."""
+    """
+    Test that a polygon with a spike that only meets one of the criteria
+    used to mark spikes, is equal to the original polygon after processing.
+    """
     test_geom = (
         simple_polygon_fixture.loc[
             simple_polygon_fixture["name"] == "single_criteria"
@@ -98,8 +111,10 @@ def test_polygon_single_criteria(simple_polygon_fixture, default_processor):
 
 
 def test_polygon_holes_no_spikes(polygon_with_holes, default_processor):
-    """Test that a polygon with holes but no spikes is returned without any
-    changes after being processed."""
+    """
+    Test that a polygon with holes but no spikes is returned without any
+    changes after being processed.
+    """
     test_geom = (
         polygon_with_holes.loc[
             polygon_with_holes["name"] == "no_spikes"
@@ -122,8 +137,10 @@ def test_polygon_holes_no_spikes(polygon_with_holes, default_processor):
 
 
 def test_polygon_interior_spike(polygon_with_holes, default_processor):
-    """Test that a polygon with a spike on a interior ring is returned without
-    the internal spike after processing."""
+    """
+    Test that a polygon with a spike on a interior ring is returned without
+    the internal spike after processing.
+    """
     test_geom = (
         polygon_with_holes.loc[
             polygon_with_holes["name"] == "interior_spike"
@@ -147,8 +164,10 @@ def test_polygon_interior_spike(polygon_with_holes, default_processor):
 
 
 def test_multiple_interior_spikes(polygon_with_holes, default_processor):
-    """Test that a polygon with spikes in multiple interior rings is returned
-    without any of the spikes after processing."""
+    """
+    Test that a polygon with spikes in multiple interior rings is returned
+    without any of the spikes after processing.
+    """
     test_geom = (
         polygon_with_holes.loc[
             polygon_with_holes["name"] == "multiple_holes_with_spikes"
