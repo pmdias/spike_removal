@@ -10,12 +10,17 @@ from . import utils, process
 
 @click.command()
 @click.argument("filename", type=click.Path(exists=True))
-@click.option("--angle", default=1.0, help="Angle")
-@click.option("--distance", default=100000.0, help="Distance")
-@click.option("-o", "--output", required=True, help="Output filename")
+@click.option("--angle", default=1.0, help="""
+    Maximum angle, in degrees, used to evaluate spikes. Defaults to 1.0º.""")
+@click.option("--distance", default=100000.0, help="""
+    Minimum distance, in meters, used to evaluate spikes. Defaults to 100 000m
+    """)
+@click.option("-o", "--output", required=True, help="""
+    Name of the output destination file""")
 def main(filename: str, angle: float, distance: float, output: str):
     """
-    spike_removal entrypoint
+    A command-line tool used to remove spikes from polygons stored in
+    Geopackage format.
     """
     data = utils.load_geopackage(filename)
 
