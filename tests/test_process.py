@@ -10,26 +10,6 @@ from shapely import geometry
 from spike_removal import process, utils
 
 
-class TestAngles:
-    """Test suite for angular operations"""
-
-    def test_90_degree_angle(self):
-        """Test that an angle is a 90 degree angle"""
-        assert process.get_angle_between_azimuths(0, 90) == 90
-
-    def test_0_degree_angle(self):
-        """Test that an angle is a 0 degree angle"""
-        assert process.get_angle_between_azimuths(0, 0) == 0
-
-    def test_angle_is_wrapped(self):
-        """Test that an angle is wrapped around the 180 degree angle"""
-        assert process.get_angle_between_azimuths(0, 270) == 90
-
-    def test_known_angle(self):
-        """Test against a know angle"""
-        assert process.get_angle_between_azimuths(10, -15) == 25
-
-
 @pytest.fixture
 def simple_polygon_fixture():
     """Fixture for simple polygon"""
@@ -194,3 +174,23 @@ def test_multiple_interior_spikes(polygon_with_holes, default_processor):
         len(polygon.interiors[1].coords) ==
         len(test_geom.interiors[1].coords) - 1
     )
+
+
+def test_90_degree_angle():
+    """Test that an angle is a 90 degree angle"""
+    assert process.get_angle_between_azimuths(0, 90) == 90
+
+
+def test_0_degree_angle():
+    """Test that an angle is a 0 degree angle"""
+    assert process.get_angle_between_azimuths(0, 0) == 0
+
+
+def test_angle_is_wrapped():
+    """Test that an angle is wrapped around the 180 degree angle"""
+    assert process.get_angle_between_azimuths(0, 270) == 90
+
+
+def test_known_angle():
+    """Test against a know angle"""
+    assert process.get_angle_between_azimuths(10, -15) == 25
