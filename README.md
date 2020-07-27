@@ -21,4 +21,4 @@ Usage guide
 
 ## Diagram
 
-![diagram](https://github.com/pmdias/spike_removal/docs/spike_removal_diagram.svg)
+![diagram](https://github.com/pmdias/spike_removal/blob/master/docs/spike_removal_diagram.svg?raw=true)
