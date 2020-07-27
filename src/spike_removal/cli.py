@@ -1,5 +1,6 @@
 """
-Command line entrypoint
+Module that contains the single method that is currently used by this tool as
+the command line entrypoint.
 """
 import click
 from geopandas import GeoDataFrame

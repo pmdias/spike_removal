@@ -1,4 +1,7 @@
-"""Geometry processing with methods for spike removal
+"""
+Geometry processing with methods for spike removal. Currently the only method
+used for spike removal relies on an input angle and minimum distance that will
+be used to evaluate every triangle that makes a boundary for an input geometry.
 """
 import pyproj
 from shapely import coords
@@ -20,8 +23,12 @@ def get_angle_between_azimuths(azimuth1, azimuth2) -> float:
 
 
 class GeometryProcessor:
-    """Processor used to ingest a geometry as a sequence of geographic
-    coordinates and remove spikes.
+    """
+    Processor used to ingest a geometry as a sequence of geographic
+    coordinates and remove spikes. Triangles on the boundary of the geometry
+    are considered spikes when the angle of the triangle corner is less than
+    a specified angle and the edges of the triangle that are part of the
+    geometry boundary have a length greater than a specified length.
     """
     min_angle: float = 1.0
     min_distance: float = 100000.0
@@ -35,13 +42,17 @@ class GeometryProcessor:
             geod: pyproj.Geod,
             sequence: coords.CoordinateSequence
     ) -> list:
-        """Process a sequence of coordinate points and remove all spikes.
+        """
+        Process a sequence of coordinate points and remove all spikes. If the
+        sequence would form a simple triangle, we skip the sequence and return
+        it without any changes. This is done in order to avoid generating
+        invalid geometries.
 
         :param geod: Geod used to perform distance and angle calculations
-        :type geod: pyproj.Geod
+        :type geod: `pyproj.Geod`
 
-        :param sequence: input coordinate sequence
-        :type sequence: CoordinateSequence
+        :param sequence: Input coordinate sequence
+        :type sequence: `shapely.coords.CoordinateSequence`
 
         :return: Filtered list with the spikes removed from the input sequence
         """
@@ -73,8 +84,12 @@ class GeometryProcessor:
         return final_geometry
 
     def process_triplet(self, geod: pyproj.Geod, triplet: list) -> bool:
-        """Process a triplet of vertices and check if the second vertex can be
-        marked as a spike.
+        """
+        Process a triplet of vertices and check if the second vertex can be
+        marked as a spike. A triplet of vertices is a collection of three
+        vertices that are contiguous on a certain polygon. We make this test
+        for the second vertex since that is the tip of the triangle that is
+        formed by the triplet.
 
         :param geod: Geod used to perform distance and angle calculations
         :type geod: pyproj.Geod
