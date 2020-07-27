@@ -25,7 +25,8 @@ def save_geopackage(path: str, data: geopandas.GeoDataFrame) -> None:
     :param data: Output `GeoDataFrame` instance
     :type data: GeoDataFrame
     """
-    raise NotImplementedError
+    for row in data.itertuples():
+        data.to_file(path, driver="GPKG", layer=row.name)
 
 
 def validate_crs(data: geopandas.GeoDataFrame) -> bool:

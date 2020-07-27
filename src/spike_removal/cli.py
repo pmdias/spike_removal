@@ -31,10 +31,9 @@ def main(filename: str, angle: float, distance: float, output: str):
         )
 
     geod = utils.extract_crs_geod(data)
-
     processor = process.GeometryProcessor(angle, distance)
-
     results = []
+
     for entry in data.itertuples():
         geometry = entry.geometry
 
@@ -51,7 +50,9 @@ def main(filename: str, angle: float, distance: float, output: str):
 
         results.append((entry.name, Polygon(exterior, interiors)))
 
-    out = GeoDataFrame(results, columns=["name", "geometry"], crs=data.crs)
-
-    for result in results:
-        out.to_file(output, layer=result[0], driver="GPKG")
+    cleaned_data = GeoDataFrame(
+        results,
+        columns=["name", "geometry"],
+        crs=data.crs
+    )
+    utils.save_geopackage(output, cleaned_data)
