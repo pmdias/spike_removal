@@ -33,13 +33,28 @@ will not be included in the output geometry.
 
 ## Installation
 
-Installation can be done in either of two ways. The first one requires cloning
-this repository and the installation is done from a local copy
+This tool single external dependency is [geopandas](https://geopandas.org/). The
+dependency can be installed simply by running
+
+```
+$ pip install geopandas
+```
+
+Installation of the `spike_removal` tool can be done in either of two ways.
+The first one requires cloning this repository and the installation is done
+from a local copy
 
 ```
 $ git clone https://github.com/pmdias/spike_removal.git
 $ cd spike_removal
 $ python setup.py install
+```
+
+As an alternative, you can install from git using `pip` if you wish to manage
+the installation using `pip`
+
+```
+$ pip install git+https://github.com/pmdias/spike_removal.git
 ```
 
 
