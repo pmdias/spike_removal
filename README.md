@@ -6,12 +6,41 @@ Tool used to remove spikes from polygons.
 
 ## Description
 
-Brief description of the tool
+This tool can be used to remove spikes from input geometries stored in
+`geopackage` format. This is done by parsing the input geometry and evaluating
+each set of three contigous vertices against an evaluating strategy and
+removing from the output geometry the vertices that fail to pass the test.
+
+### Spike definition
+
+The tool will consider a target vertex to be a spike if the following criteria
+is met:
+
+* The angle formed by the edges that meet at the target vertex is smaller than
+a certain angle (default is 1º);
+
+* Both edges that connect the target vertex to its neighbors vertices have at
+least a minimum length (default is 100 000 meters, i.e., 100 km);
+
+When a vertex meets both of the criteria, it is removed from the geometry and
+will not be included in the output geometry.
+
+
+## Example
+
+![example](https://github.com/pmdias/spike_removal/blob/master/docs/example.png?raw=true)
 
 
 ## Installation
 
-Installation guide
+Installation can be done in either of two ways. The first one requires cloning
+this repository and the installation is done from a local copy
+
+```
+$ git clone https://github.com/pmdias/spike_removal.git
+$ cd spike_removal
+$ python setup.py install
+```
 
 
 ## Usage
@@ -55,6 +84,9 @@ The value of `distance` defaults to 100 000 meters if not specified;
 * `--output`: The output path where the processed geometry will be saved to;
 
 
-## Diagram
+## Details
+
+The following diagram provides a more detailed explanation of the internals
+of this tool.
 
 ![diagram](https://github.com/pmdias/spike_removal/blob/master/docs/spike_removal_diagram.svg?raw=true)
