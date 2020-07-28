@@ -99,6 +99,15 @@ The value of `distance` defaults to 100 000 meters if not specified;
 * `--output`: The output path where the processed geometry will be saved to;
 
 
+## Notes
+
+* Currently the tool only works for inputs that use a geographic coordinate
+system based, for example, on `WGS84`;
+
+* For systems with 3-dimensional coordinates, currently the third coordinate,
+usually `z`, is ignored by the tool;
+
+
 ## Details
 
 The following diagram provides a more detailed explanation of the internals
